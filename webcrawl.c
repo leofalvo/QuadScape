@@ -70,9 +70,6 @@ int main(int argc, char *argv[]) {
                 free(chunk.memory);
                 g_free(site);
                 
-                // Add your processing logic here
-                
-                g_free(site);
             } else {
                 break;
             }
