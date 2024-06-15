@@ -10,16 +10,28 @@ struct MemoryStruct {
   char *memory;
   size_t size;
 };
+static int process_html(char* memory, GQueue *queue){
+  printf(memory);
+  return 0;
+}
+ 
+static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp) {
+    size_t realsize = size * nmemb;
+    struct MemoryStruct *mem = (struct MemoryStruct *)userp;
 
-static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp){
-  size_t realsize = size * nmemb;
-  struct MemoryStruct *mem = (struct MemoryStruct *)userp;
+    char *ptr = realloc(mem->memory, mem->size + realsize + 1);
+    if (ptr == NULL) {
+        // Out of memory!
+        fprintf(stderr, "Not enough memory (realloc returned NULL)\n");
+        return 0;
+    }
 
-  char *ptr = realloc(mem->memory, mem->size + realsize +  1);
-  if (ptr == NULL){
-    printf("Insufficient memory");
-    return 0;
-  }
+    mem->memory = ptr;
+    memcpy(&(mem->memory[mem->size]), contents, realsize);
+    mem->size += realsize;
+    mem->memory[mem->size] = 0;
+
+    return realsize;
 }
 
 int main(int argc, char *argv[]) {
@@ -60,12 +72,11 @@ int main(int argc, char *argv[]) {
                 curl_easy_setopt(curl, CURLOPT_URL, site);
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
                 curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)&chunk);
-                
                 res = curl_easy_perform(curl);
                 if (res != CURLE_OK){
                   fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
                 } else {
-                process_html(chunk.memory, queue, text_data);
+                process_html(chunk.memory, queue);
                 }
                 free(chunk.memory);
                 g_free(site);
