@@ -3,8 +3,8 @@
 CC = gcc
 
 # Define the compiler flags
-CFLAGS = `pkg-config --cflags glib-2.0 libcurl`
-LDFLAGS = `pkg-config --libs glib-2.0 libcurl`
+CFLAGS = `pkg-config --cflags glib-2.0 libcurl libxml-2.0`
+LDFLAGS = `pkg-config --libs glib-2.0 libcurl libxml-2.0`
 
 # Define the target executable
 TARGET = webcrawl
