@@ -1,4 +1,4 @@
-## Quick And Dirty Netscape (Web Browser)
+## Quick And Dirty Netscape (Search engine)
 
 Warning: bad, incomplete code
 
